@@ -1,0 +1,169 @@
+296/1: print('aha')
+297/1: import os
+297/2: os?
+298/1: import os
+298/2: os.listdir?
+299/1: print('hello world')
+299/2: print('hello world')
+299/3: import os
+299/4: os?
+299/5: promena = 'hello'
+299/6: promena2 = "hello"
+299/7: promena3 = 'I don't like today's weather'
+299/8: promena3 = "I don't like today's weather"
+299/9: promena3 = 'I don\'t like today\'s weather'
+299/10: promena3 = "I don\'t like today\'s weather"
+299/11: promena3 = "I don't like today's weather"
+300/1: import this
+299/12: promena4 = """I don't like today's weather"""
+299/13: promena == promena2
+299/14: promena3 == promena4
+299/15: promena4 = """I don't like  today's weather"""
+299/16: promena3 == promena4
+299/17: promena3 == promena4
+299/18: promena4 = """I don't like today's weather"""
+299/19: promena3 == promena4
+299/20: 2 > 5
+299/21: 5 > 3
+299/22: 5 >= 5
+299/23: type(promena)
+299/24: type(5)
+299/25: type('hello')
+299/26: type(5.0)
+299/27: promena.istitle?
+299/28: promena4.istitle()
+299/29: 'Aha'.istitle()
+299/30: 'Aha Aha'.istitle()
+299/31: dir(promena)
+299/32: cislo = 5
+299/33: cislo = 5.0
+299/34: promena is promena2
+299/35: id(promena)
+299/36: id(promena2)
+299/37: id?
+299/38: jedna = "2"
+299/39: adresa = "Purkynova 112"
+299/40: adresa[len(adresa) - 1]
+299/41: ardresa[-1]
+299/42: adresa[-1]
+299/43: adresa[-1] = "1"
+299/44: adresa[-1] = "1"
+299/45: adresa.replace?
+299/46: adresa.replace??
+299/47: import os
+299/48: os.listdir??
+299/49: adresa.find("2")
+299/50: adresa.find("a")
+299/51: adresa.find("1")
+299/52: adresa.rfind("1")
+299/53: poloupnost = [1,2,3]
+299/54: druha = posloupnost
+299/55: posloupnost = [1,2,3]
+299/56: druha = posloupnost
+299/57: posloupnost == druha
+299/58: posloupnost.append(4)
+299/59: posloupnost
+299/60: druha
+299/61: treti = [1,2,3,4]
+299/62: treti==druha
+299/63: treti is druha
+299/64: treti.append(0)
+299/65: treti == druha
+299/66: adresa
+299/67: adresa.replace('2', '4')
+299/68: adresa
+299/69: adresa = adresa.replace('2', '4')
+299/70: adresa
+299/71: seznam = ['jablko', 'hruska', 'meloun']
+299/72: seznam.sort?
+299/73: seznam.sort()
+299/74: seznam
+301/1:
+slovnik = {
+1 : 2,
+20 : 0,
+3 : 1}
+301/2: slovnik
+301/3: type(slovnik)
+301/4: slovnik.keys()
+301/5: slovnik.values()
+301/6: dict
+301/7: dict()
+301/8: vysledek = dict()
+301/9: vysledek
+301/10: slovnik
+301/11: slovnik[5] = 10
+301/12: slovnik
+301/13:
+def postav():
+    vysledek = {}
+    """
+    .
+    .
+    """
+    return vysledek
+301/14: print(postav())
+301/15: slovnik
+301/16: slovnik.keys()
+301/17: slovnik[1]
+301/18: slovnik.keys?
+301/19: slovnik.keys?
+301/20: slovnik.values?
+301/21: slovnik[1]
+301/22: slovnik[5]
+301/23: slovnik[6]
+301/24: slovnik.get(1)
+301/25: slovnik.get(6)
+301/26: neco = slovnik.get(6)
+301/27: neco
+301/28: type(neco)
+301/29:
+if not slovnik.get(6):
+    print('ve slovniku neni klic 6')
+301/30: __name__
+303/1: import main
+303/2: main.cisla
+304/1: import main
+304/2: main.__name__
+305/1: import pocitadlo
+305/2: pocitadlo.__name__
+305/3: pocitadlo.kolik_cisla_mezi_cisly?
+305/4: pocitadlo.kolik_cisla_mezi_cisly??
+305/5: import sys
+305/6: sys.flags??
+305/7: import collections
+305/8: collections.ChainMap??
+305/9: collections.abc?
+305/10: collections.namedtuple?
+305/11: poradi = (1,)
+305/12: type(poradi)
+305/13: poradi = 1,2
+305/14: type(poradi)
+305/15:
+def spocitej(a,b):
+    return a+b
+305/16: spocitej(2,3)
+305/17:
+def spocitej(a,b):
+    return a,b,a+b
+305/18: spocitej(2,3)
+305/19: a,b,vysledek = spocitej(2,3)
+305/20: a
+305/21: b
+305/22: vysledek
+305/23: a,b,vysledek,ble = spocitej(2,3)
+305/24: a,b = spocitej(2,3)
+305/25: str.split?
+305/26: [if fruit.endswith('n') else None for fruit in fruits]
+305/27: [fruit.endswith('n') for fruit in fruits]
+305/28:
+if True:
+    print('True')
+305/29:
+if False or True:
+    print('a')
+305/30: if True print('a') else None
+305/31: if True 'a' else None
+305/32: 'a' if True else 'b'
+   1: %history -g
+
