@@ -6,21 +6,30 @@ def test_film():
     assert film.title == "Fantomas"
 
 
-def test_db():
-    db = moviedb.db.create_database()
+def test_memory_db():
+    db = moviedb.db.MemoryFilmStorage()
+    any_db_basic_test(db)
+
+
+# def test_sqlite_db():
+#     db = moviedb.db.SqliteFilmStorage()
+#     any_db_basic_test(db)
+
+
+def any_db_basic_test(db):
     store_fantomas_to_db(db)
 
     assert fantomas_in_db(db)
-    assert moviedb.db.get_film_by_title(db, "Franta") is None
+    assert db.get_by_title("Franta") is None
 
 
 def store_fantomas_to_db(db):
     film = moviedb.db.Film("Fantomas", 120, ["action"])
-    moviedb.db.store_film(db, film)
+    db.store(film)
 
 
 def fantomas_in_db(db):
-    film = moviedb.db.get_film_by_title(db, "Fantomas")
+    film = db.get_by_title("Fantomas")
     return film.title == "Fantomas"
 
 
@@ -38,20 +47,25 @@ def test_film_save_and_restore_as_dict():
     assert film == film_from_dict
 
 
-def test_save_and_restore():
-    db = moviedb.db.create_database()
-    store_fantomas_to_db(db)
+def test_memory_save_and_restore():
+    db1 = moviedb.db.MemoryFilmStorage()
+    db2 = moviedb.db.MemoryFilmStorage()
+    any_save_and_restore(db1, db2)
+
+
+def any_save_and_restore(save_db, restore_db):
+    assert save_db is not restore_db
+
+    store_fantomas_to_db(save_db)
 
     film = moviedb.db.Film("Fantomas 2", 120, ["action"])
-    moviedb.db.store_film(db, film)
+    save_db.store(film)
 
-    moviedb.db.save_database(db, "dbfile")
-    db2 = moviedb.db.restore_database("dbfile")
+    moviedb.db.save_database(save_db, "dbfile")
 
-    assert fantomas_in_db(db2)
+    moviedb.db.restore_database(restore_db, "dbfile")
 
-    film = moviedb.db.get_film_by_title(db, "Fantomas 2")
+    assert fantomas_in_db(restore_db)
+
+    film = restore_db.get_by_title("Fantomas 2")
     return film.title == "Fantomas 2"
-
-
-
