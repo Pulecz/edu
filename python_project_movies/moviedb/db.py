@@ -35,29 +35,58 @@ class Film(object):
         return result
 
 
-def create_database():
-    return []
+class FilmStorage(object):
+    def store(self, film):
+        raise NotImplementedError()
+
+    def get_by_title(self, title):
+        raise NotImplementedError()
 
 
-def store_film(db, film):
-    db.append(film)
+class MemoryFilmStorage(FilmStorage):
+    def __init__(self):
+        self._database = []
+
+    def __iter__(self):
+        return self._database.__iter__()
+
+    def store(self, film):
+        self._database.append(film)
+
+    def get_by_title(self, title):
+        for film in self._database:
+            if film.title == title:
+                return film
 
 
-def get_film_by_title(db, title):
-    for film in db:
-        if film.title == title:
-            return film
+class SqliteFilmStorage(FilmStorage):
+    def __init__(self, filename):
+        raise NotImplementedError()
+
+    def __iter__(self):
+        raise NotImplementedError()
+
+    def store(self, film):
+        self._database.append(film)
+
+    def get_by_title(self, title):
+        for film in self._database:
+            if film.title == title:
+                return film
 
 
 def save_database(db, filename):
     db_of_dicts = [f.to_dict() for f in db]
     with open(filename, "w") as save_file:
         json.dump(db_of_dicts, save_file)
-    pass
 
 
-def restore_database(filename):
+def restore_database(empty_db, filename):
     with open(filename, "r") as restore_file:
         db_of_dicts = json.load(restore_file)
-    db = [Film.from_dict(d) for d in db_of_dicts]
-    return db
+
+    for d in db_of_dicts:
+        f = Film.from_dict(d)
+        empty_db.store(f)
+
+    return empty_db
