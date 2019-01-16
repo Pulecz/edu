@@ -17,3 +17,8 @@ args = parse_arguments()
 
 if args.command == "list":
     print("<list of films in {fname}>".format(fname=args.filename))
+    empty_db = db.MemoryFilmStorage()
+    populated_db = db.restore_database(empty_db, args.filename)
+
+    for film in populated_db:
+        print(film.to_dict())

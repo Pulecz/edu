@@ -1,4 +1,5 @@
 import json
+import sqlite3
 
 
 class Film(object):
@@ -34,6 +35,14 @@ class Film(object):
             d["genres"], d["rating"])
         return result
 
+    def to_dict_for_sqlite(self):
+        result = dict()
+        result["title"] = self.title
+        result["duration"] = self.duration
+        result["genres"] = str(self.genres)
+        result["rating"] = self.rating
+        return result
+
 
 class FilmStorage(object):
     def store(self, film):
@@ -60,19 +69,51 @@ class MemoryFilmStorage(FilmStorage):
 
 
 class SqliteFilmStorage(FilmStorage):
-    def __init__(self, filename):
-        raise NotImplementedError()
+    def __init__(self):
+        self._conn = sqlite3.connect('dbfile.db')
+        self._c = self._conn.cursor()
+        sql = '''CREATE TABLE IF NOT EXISTS movies (
+            title TEXT,
+            duration INTEGER,
+            genres TEXT,
+            rating REAL
+            )
+        '''
+        self._c.execute(sql)
 
     def __iter__(self):
-        raise NotImplementedError()
+        return self._c.__iter__()
 
     def store(self, film):
-        self._database.append(film)
+        sql = '''
+        INSERT INTO movies (
+            title,
+            duration,
+            genres,
+            rating
+        ) VALUES (?,?,?,?)
+        '''
+        values = tuple(film.to_dict_for_sqlite().values())
+        self._c.execute(sql, values)
+        self._conn.commit()
 
     def get_by_title(self, title):
-        for film in self._database:
-            if film.title == title:
-                return film
+        self._c.row_factory = sqlite3.Row
+
+        sql = '''
+        SELECT * FROM movies
+        WHERE title = ?
+        '''
+        self._c.execute(sql, (title, ))
+        data = self._c.fetchone()
+
+        if not data:
+            return None
+        else:
+            return Film(data['title'], data['duration'], data['genres'], data['rating'])
+
+    def close(self):
+        self._c.close()
 
 
 def save_database(db, filename):

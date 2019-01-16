@@ -11,9 +11,9 @@ def test_memory_db():
     any_db_basic_test(db)
 
 
-# def test_sqlite_db():
-#     db = moviedb.db.SqliteFilmStorage()
-#     any_db_basic_test(db)
+def test_sqlite_db():
+    db = moviedb.db.SqliteFilmStorage()
+    any_db_basic_test(db)
 
 
 def any_db_basic_test(db):
