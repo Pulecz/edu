@@ -35,14 +35,6 @@ class Film(object):
             d["genres"], d["rating"])
         return result
 
-    def to_dict_for_sqlite(self):
-        result = dict()
-        result["title"] = self.title
-        result["duration"] = self.duration
-        result["genres"] = str(self.genres)
-        result["rating"] = self.rating
-        return result
-
 
 class FilmStorage(object):
     def store(self, film):
@@ -93,7 +85,9 @@ class SqliteFilmStorage(FilmStorage):
             rating
         ) VALUES (?,?,?,?)
         '''
-        values = tuple(film.to_dict_for_sqlite().values())
+        film_dict = film.to_dict()
+        film_dict["genres"] = ",".join(film_dict["genres"])
+        values = tuple(film_dict.values())
         self._c.execute(sql, values)
         self._conn.commit()
 
@@ -110,7 +104,8 @@ class SqliteFilmStorage(FilmStorage):
         if not data:
             return None
         else:
-            return Film(data['title'], data['duration'], data['genres'], data['rating'])
+            genres = data['genres'].split(",")
+            return Film(data['title'], data['duration'], genres, data['rating'])
 
     def close(self):
         self._c.close()

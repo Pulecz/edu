@@ -41,7 +41,7 @@ def test_film_comparison():
 
 
 def test_film_save_and_restore_as_dict():
-    film = moviedb.db.Film("Fantomas", 120, ["action"])
+    film = moviedb.db.Film("Fantomas", 120, ["action", "comedy"])
     film_as_dict = film.to_dict()
     film_from_dict = moviedb.db.Film.from_dict(film_as_dict)
     assert film == film_from_dict
@@ -53,12 +53,18 @@ def test_memory_save_and_restore():
     any_save_and_restore(db1, db2)
 
 
+def test_sqlite_save_and_restore():
+    db1 = moviedb.db.SqliteFilmStorage()
+    db2 = moviedb.db.SqliteFilmStorage()
+    any_save_and_restore(db1, db2)
+
+
 def any_save_and_restore(save_db, restore_db):
     assert save_db is not restore_db
 
     store_fantomas_to_db(save_db)
 
-    film = moviedb.db.Film("Fantomas 2", 120, ["action"])
+    film = moviedb.db.Film("Fantomas 2", 120, ["action", "comedy"])
     save_db.store(film)
 
     moviedb.db.save_database(save_db, "dbfile")
@@ -68,4 +74,5 @@ def any_save_and_restore(save_db, restore_db):
     assert fantomas_in_db(restore_db)
 
     film = restore_db.get_by_title("Fantomas 2")
-    return film.title == "Fantomas 2"
+    assert film.title == "Fantomas 2"
+    assert film.genres == set(["action", "comedy"])
