@@ -1,31 +1,65 @@
+from . import db
+
 import sqlalchemy as sqla
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, relationship
 
-engine = create_engine('sqlite:///sqla.db', echo=True)
 
 Base = declarative_base()
 
 
-class Film(Base):
+GenreInFilm = sqla.Table(
+    'genre_in_film', Base.metadata,
+    sqla.Column(
+        'film_id', sqla.String,
+        sqla.ForeignKey('films.title')),
+    sqla.Column(
+        'genre_id', sqla.String,
+        sqla.ForeignKey('genres.title')),
+)
+
+
+class FilmInDB(Base):
     __tablename__ = 'films'
 
     title = sqla.Column(sqla.String, primary_key=True)
-    genres = sqla.Column(sqla.String)
     duration = sqla.Column(sqla.Integer)
     rating = sqla.Column(sqla.Float)
 
-
-Base.metadata.create_all(engine)
-
-film = Film(title="Fantomas", genres="action,comedy", duration=120)
-print(film.title)
+    genres = relationship(
+        "GenreInDB",
+        secondary=GenreInFilm)
 
 
-from sqlalchemy.orm import sessionmaker
+class GenreInDB(Base):
+    __tablename__ = "genres"
 
-Session = sessionmaker(bind=engine)
+    title = sqla.Column(sqla.String, primary_key=True)
 
-session = Session()
-session.add(film)
-session.commit()
+
+class SqlAlchemyFilmStorage(db.FilmStorage):
+    def __init__(self, backend):
+        self.engine = create_engine(backend, echo=True)
+        Base.metadata.create_all(self.engine)
+        self.Session = sessionmaker(bind=self.engine)
+
+    def store(self, film):
+        film_dict = film.to_dict()
+        genres_as_classes = [
+            GenreInDB(title=title)
+            for title in film_dict["genres"]]
+        film_dict["genres"] = genres_as_classes
+        # film_in_db = FilmInDB(title=film_dict["title"], genres=film_dict["genres"], ...)
+        film_in_db = FilmInDB(** film_dict)
+        session = self.Session()
+        session.add(film_in_db)
+        session.commit()
+
+    def get_by_title(self, title):
+        session = self.Session()
+        result = session.\
+            query(FilmInDB).\
+            filter(FilmInDB.title == title).\
+            first()
+        return result

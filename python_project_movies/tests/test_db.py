@@ -1,4 +1,7 @@
+import os
+
 import moviedb.db
+import moviedb.sqla
 
 
 def test_film():
@@ -13,6 +16,16 @@ def test_memory_db():
 
 def test_sqlite_db():
     db = moviedb.db.SqliteFilmStorage()
+    any_db_basic_test(db)
+
+
+def test_sqlalchemy_db():
+    filename = "sqla.db"
+    # backend = "sqlite:///{filename}.format(filename=filename)"
+    # backend = "sqlite:///{0}.format(filename)"
+    os.remove(filename)
+    backend = f"sqlite:///{filename}"
+    db = moviedb.sqla.SqlAlchemyFilmStorage(backend)
     any_db_basic_test(db)
 
 
