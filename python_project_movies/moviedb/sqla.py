@@ -44,15 +44,25 @@ class SqlAlchemyFilmStorage(db.FilmStorage):
         Base.metadata.create_all(self.engine)
         self.Session = sessionmaker(bind=self.engine)
 
+    def _genre_to_class(self, session, genre):
+        existing_genre = session.query(GenreInDB).\
+                filter(GenreInDB.title == genre).\
+                first()
+        if not existing_genre:
+            return GenreInDB(title=genre)
+        return existing_genre
+
     def store(self, film):
         film_dict = film.to_dict()
+        session = self.Session()
+
         genres_as_classes = [
-            GenreInDB(title=title)
+            self._genre_to_class(session, title)
             for title in film_dict["genres"]]
         film_dict["genres"] = genres_as_classes
         # film_in_db = FilmInDB(title=film_dict["title"], genres=film_dict["genres"], ...)
         film_in_db = FilmInDB(** film_dict)
-        session = self.Session()
+
         session.add(film_in_db)
         session.commit()
 
