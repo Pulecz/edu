@@ -34,4 +34,11 @@ Where db.json is json file saved by the example above
 - adding movies via client
 - GUI frontend in flask
 
-
+# Docker image
+* Based on latest [alpine](https://hub.docker.com/_/alpine)
+* uses czech mirrors
+* installs python3 and py3-flask with its dependencies
+* copies moviedb folder, server.py and films.json in WORKDIR=/var/www
+* exposes default internal port 5000 to containers 5000
+* ENTRYPOINT is $(ip a) and flask run --host 0.0.0.0, FLASK_APP is set to server.py
+* **currently** it's set to debug the web_app, production should use something like [gunicorn](https://gunicorn.org/) 
