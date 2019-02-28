@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+	<header>
+	</header>
+	<body>
+		<ul>
+			<li>1</li>
+			<li>2</li>
+			{% for it in all_movies %}
+			<li>Film title: {{ it.title }}, takes {{ it.duration }} minutes.</li>
+			{% endfor %}
+		</ul>
+	</body>
+</html>

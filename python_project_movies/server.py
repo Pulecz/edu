@@ -1,8 +1,21 @@
 import moviedb.db
+import moviedb.sqla
 
+import flask
 from flask import Flask
 from flask import jsonify
 app = Flask(__name__)
+
+
+db_instance = moviedb.sqla.SqlAlchemyFilmStorage(
+    "sqlite:///sqla.db")
+
+
+@app.route('/')
+def hello_world():
+    all_movies = db_instance.get_all()
+    return flask.render_template(
+        "sample.html", all_movies=all_movies)
 
 
 @app.route('/film/<wanted_film>')
@@ -26,3 +39,6 @@ def show_film(wanted_film):
                 result[wanted_film] = film.to_dict()
     # use flask.jsonify for return json
     return jsonify(**result)
+
+
+app.run('0.0.0.0', 5000, True)

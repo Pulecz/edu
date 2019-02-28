@@ -31,6 +31,12 @@ class FilmInDB(Base):
         "GenreInDB",
         secondary=GenreInFilm)
 
+    def to_film(self):
+        film = db.Film(
+            self.title, self.duration,
+            self.genres, self.rating)
+        return film
+
 
 class GenreInDB(Base):
     __tablename__ = "genres"
@@ -43,6 +49,11 @@ class SqlAlchemyFilmStorage(db.FilmStorage):
         self.engine = create_engine(backend, echo=True)
         Base.metadata.create_all(self.engine)
         self.Session = sessionmaker(bind=self.engine)
+
+    def get_all(self):
+        session = self.Session()
+        all_movies = session.query(FilmInDB).all()
+        return [m.to_film() for m in all_movies]
 
     def _genre_to_class(self, session, genre):
         existing_genre = session.query(GenreInDB).\
